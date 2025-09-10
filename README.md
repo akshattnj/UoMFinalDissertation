@@ -105,11 +105,19 @@ ros2 control list_controllers
 ros2 run spiral_tracik_executor spiral_executor_node
 ```
 
----
-
 ## Outputs
 - Segmentation masks and trajectory logs are stored under `results/`.  
 - Analysis scripts compute precision, IoU, and seed sensitivity statistics.
+
+---
+
+## License Notice for tracikpy
+The `tracikpy` folder included in this repository is distributed under the MIT License, originally authored by **Michael Danielczuk (c) 2021**.
+It has been added here to allow local installation via `pip install .`.
+
+
+For details, please see the `LICENSE` file inside the `tracikpy/` folder.
+
 
 ---
 
