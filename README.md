@@ -17,12 +17,13 @@ This repository contains the ROS 2 Humble workspace and scripts used in my disse
 ├── ros2_robotiq_gripper/      # placeholder only
 ├── ros_gz/                    # placeholder only
 ├── serial/                    # placeholder only
-└── spiral_tracik_executor/    # ✅ main package
+└── spiral_tracik_executor/    # main package
     ├── scripts/               # segmentation, IK mapping, execution
     ├── images/                # wound samples + masks
     ├── configs/               # DeepSkin + TRAC-IK configs
     ├── results/               # output logs, IoU/seed sensitivity
-    └── spiral_executor_node.py
+    └── spiral_executor_node
+        └── spiral_executor_node.py  #the code that matters
 ```
 
 Each placeholder folder has a short README that points to external installation instructions.
