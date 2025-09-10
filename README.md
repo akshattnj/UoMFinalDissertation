@@ -3,30 +3,27 @@
 This repository contains the ROS 2 Humble workspace and scripts used in my dissertation project:  
 **Autonomous Path Planning on Kinova Gen 3 7-DOF Manipulator for Cleaning Wounds Using Computer Vision**.
 
-## Repository Structure
+## Repository Structure (Full Workspace)
+When fully set up with dependencies, the workspace should look like this:
 ```
 .
-├── control_msgs/              # placeholder only
-├── gazebo_ros2_control/       # placeholder only
-├── gz_ros2_control/           # placeholder only
-├── picknik_controllers/       # placeholder only
-├── realtime_tools/            # placeholder only
-├── ros2_control/              # placeholder only
-├── ros2_controllers/          # placeholder only
-├── ros2_kortex/               # placeholder only (see Kinova docs)
-├── ros2_robotiq_gripper/      # placeholder only
-├── ros_gz/                    # placeholder only
-├── serial/                    # placeholder only
-└── spiral_tracik_executor/    # main package
-    ├── scripts/               # segmentation, IK mapping, execution
-    ├── images/                # wound samples + masks
-    ├── configs/               # DeepSkin + TRAC-IK configs
-    ├── results/               # output logs, IoU/seed sensitivity
-    └── spiral_executor_node
-        └── spiral_executor_node.py  #the code that matters
+├── control_msgs
+├── gazebo_ros2_control
+├── gz_ros2_control
+├── picknik_controllers
+├── realtime_tools
+├── ros2_control
+├── ros2_controllers
+├── ros2_kortex
+├── ros2_robotiq_gripper
+├── ros_gz
+├── serial
+├── tracikpy                  # included here for pip install
+└── spiral_tracik_executor     # main package from this repository
 ```
 
-Each placeholder folder has a short README that points to external installation instructions.
+**Note:** Only `spiral_tracik_executor/` and a local `tracikpy/` folder (for pip installation) are included in this repository.  
+All other packages (`ros2_kortex`, `ros2_control`, etc.) must be installed using **vcs import** as described below.
 
 ---
 
@@ -37,19 +34,15 @@ Each placeholder folder has a short README that points to external installation 
 
 2. **Kinova ros2_kortex packages**  
    Install following the official documentation:  
-   🔗 [Kinovarobotics/ros2_kortex](https://github.com/Kinovarobotics/ros2_kortex/tree/humble#readme-ov-file)
+   [Kinovarobotics/ros2_kortex](https://github.com/Kinovarobotics/ros2_kortex/tree/humble#readme-ov-file)
 
    ```bash
-   sudo apt install ros-humble-kortex-bringup \
-                    ros-humble-kinova-gen3-7dof-robotiq-2f-85-moveit-config
+   sudo apt install ros-humble-kortex-bringup
    ```
 
-3. **MoveIt 2**  
-   [Install MoveIt 2 for ROS 2 Humble](https://moveit.ros.org/install-moveit2/binary/)
-
-4. **Python dependencies**
+3. **Python dependencies**
    - `deepskin` (for wound segmentation)
-   - `tracikpy` (local build from source)
+   - `tracikpy` (installed locally from the `tracikpy/` folder in this repo)
    - `opencv-python`, `numpy`, `pillow`
 
 ---
@@ -62,18 +55,23 @@ Clone and build this workspace:
 mkdir -p ~/gen3_ws/src
 cd ~/gen3_ws
 
-# Clone this repo
-git clone https://github.com/YOUR_USERNAME/gen3_wound_cleaning.git src/gen3_wound_cleaning
+# Clone this repository
+git clone https://github.com/akshattnj/UoMFinalDissertation.git src/UoMFinalDissertation
 
-# Install Kinova dependencies (not bundled in repo)
-vcs import src --skip-existing --input src/gen3_wound_cleaning/ros2_kortex/ros2_kortex.$ROS_DISTRO.repos
-vcs import src --skip-existing --input src/gen3_wound_cleaning/ros2_kortex/ros2_kortex-not-released.$ROS_DISTRO.repos
-vcs import src --skip-existing --input src/gen3_wound_cleaning/ros2_kortex/simulation.humble.repos
+# Pull Kinova and simulation dependencies (not bundled in this repo)
+vcs import src --skip-existing --input src/UoMFinalDissertation/ros2_kortex/ros2_kortex.$ROS_DISTRO.repos
+vcs import src --skip-existing --input src/UoMFinalDissertation/ros2_kortex/ros2_kortex-not-released.$ROS_DISTRO.repos
+vcs import src --skip-existing --input src/UoMFinalDissertation/ros2_kortex/simulation.humble.repos
 
 # Install ROS dependencies
 rosdep install --ignore-src --from-paths src -y -r
 
-# Build
+# Install tracikpy from the local folder
+cd src/UoMFinalDissertation/tracikpy
+pip install .
+
+# Build the workspace
+cd ~/gen3_ws
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release
 source install/setup.bash
 ```
@@ -92,12 +90,7 @@ ros2 launch kortex_bringup kortex_sim_control.launch.py
 ros2 control list_controllers
 ```
 
-### 3. Launch RViz + MoveIt
-```bash
-ros2 launch kinova_gen3_7dof_robotiq_2f_85_moveit_config sim.launch.py use_sim_time:=true
-```
-
-### 4. Execute Spiral Trajectory
+### 3. Execute Spiral Trajectory
 ```bash
 ros2 run spiral_tracik_executor spiral_executor_node
 ```
