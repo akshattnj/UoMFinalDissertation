@@ -14,16 +14,16 @@ When fully set up with dependencies, the workspace should look like this:
 ├── realtime_tools
 ├── ros2_control
 ├── ros2_controllers
-├── ros2_kortex
+├── ros2_kortex              # cloned separately inside this workspace
 ├── ros2_robotiq_gripper
 ├── ros_gz
 ├── serial
-├── tracikpy                  # included here for pip install
-└── spiral_tracik_executor     # main package from this repository
+├── tracikpy                 # included here for pip install
+└── spiral_tracik_executor    # main package from this repository
 ```
 
 **Note:** Only `spiral_tracik_executor/` and a local `tracikpy/` folder (for pip installation) are included in this repository.  
-All other packages (`ros2_kortex`, `ros2_control`, etc.) must be installed using **vcs import** as described below.
+All other packages (including `ros2_kortex`, `ros2_control`, etc.) must be cloned and imported inside this workspace.
 
 ---
 
@@ -33,11 +33,16 @@ All other packages (`ros2_kortex`, `ros2_control`, etc.) must be installed using
    [ROS 2 Installation Guide](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
 
 2. **Kinova ros2_kortex packages**  
-   Install following the official documentation:  
-   [Kinovarobotics/ros2_kortex](https://github.com/Kinovarobotics/ros2_kortex/tree/humble#readme-ov-file)
-
+   Clone directly inside this repository:
    ```bash
-   sudo apt install ros-humble-kortex-bringup
+   cd src/UoMFinalDissertation
+   git clone -b humble --single-branch https://github.com/Kinovarobotics/ros2_kortex.git ros2_kortex
+   ```
+   Then pull dependencies:
+   ```bash
+   vcs import src --skip-existing --input src/UoMFinalDissertation/ros2_kortex/ros2_kortex.$ROS_DISTRO.repos
+   vcs import src --skip-existing --input src/UoMFinalDissertation/ros2_kortex/ros2_kortex-not-released.$ROS_DISTRO.repos
+   vcs import src --skip-existing --input src/UoMFinalDissertation/ros2_kortex/simulation.humble.repos
    ```
 
 3. **Python dependencies**
@@ -58,7 +63,12 @@ cd ~/gen3_ws
 # Clone this repository
 git clone https://github.com/akshattnj/UoMFinalDissertation.git src/UoMFinalDissertation
 
-# Pull Kinova and simulation dependencies (not bundled in this repo)
+# Clone ros2_kortex inside the repository
+cd src/UoMFinalDissertation
+git clone -b humble --single-branch https://github.com/Kinovarobotics/ros2_kortex.git ros2_kortex
+
+# Pull additional dependencies
+cd ~/gen3_ws
 vcs import src --skip-existing --input src/UoMFinalDissertation/ros2_kortex/ros2_kortex.$ROS_DISTRO.repos
 vcs import src --skip-existing --input src/UoMFinalDissertation/ros2_kortex/ros2_kortex-not-released.$ROS_DISTRO.repos
 vcs import src --skip-existing --input src/UoMFinalDissertation/ros2_kortex/simulation.humble.repos
