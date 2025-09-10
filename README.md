@@ -90,9 +90,19 @@ source install/setup.bash
 
 ## Usage
 
+---
 ### 1. Launch Simulation
+To launch the Kinova Gen3 7-DOF in Gazebo with RViz:
 ```bash
-ros2 launch kortex_bringup kortex_sim_control.launch.py
+ros2 launch kortex_bringup kortex_sim_control.launch.py \
+sim_gazebo:=true \
+use_sim_time:=true \
+robot_type:=gen3 \
+dof:=7 \
+gripper:=robotiq_2f_85 \
+robot_name:=gen3 \
+robot_controller:=joint_trajectory_controller \
+launch_rviz:=true
 ```
 
 ### 2. Verify Controllers
